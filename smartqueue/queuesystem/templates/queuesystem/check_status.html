@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queue Status</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="mb-4">Queue Status</h1>
+
+        {% if token_statuses %}
+            <ul class="list-group">
+                {% for item in token_statuses %}
+                    <li class="list-group-item">
+                        <b>Token:</b> {{ item.token.token_number }} <br>
+                        <b>Service:</b> {{ item.token.service.name }} <br>
+                        {% if request.user.is_superuser %}
+                            <b>Booked By:</b> {{ item.token.student.username }} <br>
+                        {% endif %}
+                        <b>Status:</b> 
+                        {% if item.token.status == "waiting" %}
+                            <span class="badge bg-warning text-dark">Waiting</span>
+                            <br><b>Position:</b> {{ item.position }}
+                        {% elif item.token.status == "served" %}
+                            <span class="badge bg-success">Served</span>
+                        {% elif item.token.status == "cancelled" %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ item.token.status }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info">You have no active tokens.</div>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
+
