@@ -9,7 +9,9 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
-
+import qrcode
+import io
+import base64
 
 
 
@@ -34,7 +36,14 @@ def join_queue(request):
                 status="waiting"
             )
 
-            return render(request, 'queuesystem/token.html', {'token': token})
+            # calculate queue position
+            ahead = Token.objects.filter(service=service, status="waiting", id__lt=token.id).count()
+            position = ahead + 1
+
+            return render(request, 'queuesystem/token.html', {
+                'token': token,
+                'position': position
+            })
     else:
         form = JoinQueueForm()
 

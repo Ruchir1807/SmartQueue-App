@@ -10,5 +10,6 @@ python smartqueue/smartqueue/manage.py migrate --noinput
 # Collect static files
 python smartqueue/smartqueue/manage.py collectstatic --noinput
 
-# Start Gunicorn (point to the deepest smartqueue.wsgi)
+# Start Gunicorn
 gunicorn smartqueue.smartqueue.smartqueue.wsgi:application --bind 0.0.0.0:$PORT
+

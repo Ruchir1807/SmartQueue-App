@@ -6,7 +6,7 @@ import qrcode
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "smartqueue.settings")
 django.setup()
 
-from queuesystem.models import Service
+from queuesystem.models import Service  # Import your Service model
 
 # Folder to save QR codes
 output_folder = "qrcodes"
@@ -24,22 +24,9 @@ else:
     for service in services:
         service_name = service.name
         url = f"{BASE_URL}{service_name}"
-
-        # Create QR code
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(url)
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-
-        # Sanitize filename
-        safe_name = service_name.replace(" ", "_")
-        filename = os.path.join(output_folder, f"{safe_name}_qr.png")
-        img.save(filename)
+        qr = qrcode.make(url)
+        filename = os.path.join(output_folder, f"{service_name}_qr.png")
+        qr.save(filename)
         print(f"QR code saved for '{service_name}' -> {filename}")
 
 print("All QR codes generated successfully!")
